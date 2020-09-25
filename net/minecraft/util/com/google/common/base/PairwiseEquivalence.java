@@ -1,0 +1,84 @@
+/*    */ package net.minecraft.util.com.google.common.base;
+/*    */ 
+/*    */ import java.io.Serializable;
+/*    */ import java.util.Iterator;
+/*    */ import javax.annotation.Nullable;
+/*    */ import net.minecraft.util.com.google.common.annotations.GwtCompatible;
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ 
+/*    */ @GwtCompatible(serializable = true)
+/*    */ final class PairwiseEquivalence<T>
+/*    */   extends Equivalence<Iterable<T>>
+/*    */   implements Serializable
+/*    */ {
+/*    */   final Equivalence<? super T> elementEquivalence;
+/*    */   private static final long serialVersionUID = 1L;
+/*    */   
+/*    */   PairwiseEquivalence(Equivalence<? super T> elementEquivalence) {
+/* 33 */     this.elementEquivalence = Preconditions.<Equivalence<? super T>>checkNotNull(elementEquivalence);
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   protected boolean doEquivalent(Iterable<T> iterableA, Iterable<T> iterableB) {
+/* 38 */     Iterator<T> iteratorA = iterableA.iterator();
+/* 39 */     Iterator<T> iteratorB = iterableB.iterator();
+/*    */     
+/* 41 */     while (iteratorA.hasNext() && iteratorB.hasNext()) {
+/* 42 */       if (!this.elementEquivalence.equivalent(iteratorA.next(), iteratorB.next())) {
+/* 43 */         return false;
+/*    */       }
+/*    */     } 
+/*    */     
+/* 47 */     return (!iteratorA.hasNext() && !iteratorB.hasNext());
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   protected int doHash(Iterable<T> iterable) {
+/* 52 */     int hash = 78721;
+/* 53 */     for (T element : iterable) {
+/* 54 */       hash = hash * 24943 + this.elementEquivalence.hash(element);
+/*    */     }
+/* 56 */     return hash;
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   public boolean equals(@Nullable Object object) {
+/* 61 */     if (object instanceof PairwiseEquivalence) {
+/* 62 */       PairwiseEquivalence<?> that = (PairwiseEquivalence)object;
+/* 63 */       return this.elementEquivalence.equals(that.elementEquivalence);
+/*    */     } 
+/*    */     
+/* 66 */     return false;
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   public int hashCode() {
+/* 71 */     return this.elementEquivalence.hashCode() ^ 0x46A3EB07;
+/*    */   }
+/*    */ 
+/*    */   
+/*    */   public String toString() {
+/* 76 */     return this.elementEquivalence + ".pairwise()";
+/*    */   }
+/*    */ }
+
+
+/* Location:              D:\Paper-1.7.10\PaperSpigot-1.7.10-R0.1-SNAPSHOT-latest.jar!\net\minecraf\\util\com\google\common\base\PairwiseEquivalence.class
+ * Java compiler version: 6 (50.0)
+ * JD-Core Version:       1.1.3
+ */
